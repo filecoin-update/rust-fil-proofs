@@ -12,3 +12,10 @@ members = [
   "filecoin-hashers",
   "storage-proofs-update",
 ]
+
+[patch.crates-io]
+bellperson = { git = "https://github.com/filecoin-project/bellperson", branch = "vmx-64gib-debug" }
+blstrs = { git = "https://github.com/filecoin-project/blstrs", branch = "vmx-64gib-debug" }
+ec-gpu = { git = "https://github.com/filecoin-project/ec-gpu", branch = "vmx-64gib-debug" }
+ec-gpu-gen = { git = "https://github.com/filecoin-project/ec-gpu", branch = "vmx-64gib-debug" }
+funty = { git = "https://github.com/bitvecto-rs/funty", rev = "7ef0d890fbcd8b3def1635ac1a877fc298488446" }
