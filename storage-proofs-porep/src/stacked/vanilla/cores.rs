@@ -265,7 +265,7 @@ mod tests {
     fn test_cores() {
         fil_logger::maybe_init();
         let result = core_units(2);
-        println!("{:?}",result)
+        // println!("{:?}",result)
     }
 
     #[test]
