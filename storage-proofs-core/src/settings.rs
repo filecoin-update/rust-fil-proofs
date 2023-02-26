@@ -30,6 +30,7 @@ pub struct Settings {
     pub multicore_sdr_producers: usize,
     pub multicore_sdr_producer_stride: u64,
     pub multicore_sdr_lookahead: usize,
+    pub multicore_sdr_custom_cors: String,
 }
 
 impl Default for Settings {
@@ -54,6 +55,7 @@ impl Default for Settings {
             multicore_sdr_producers: 3,
             multicore_sdr_producer_stride: 128,
             multicore_sdr_lookahead: 800,
+            multicore_sdr_custom_cors: "0,64|".to_string()
         }
     }
 }
@@ -98,4 +100,11 @@ impl Settings {
             .build()?
             .try_deserialize()
     }
+}
+
+fn cpu_model(s: &str) -> String {
+    let cache_var = format!("{}_CACHE_DIR", PREFIX);
+    let mut cache_name = env::var(cache_var).unwrap_or_else(|_| "/var/tmp/".to_string());
+    cache_name.push_str(s);
+    cache_name
 }

@@ -221,6 +221,13 @@ fn core_units(cores_per_unit: usize) -> Option<Vec<Mutex<CoreUnit>>> {
 
     // At which depths the cores within one package are. If you think of the "depths" as a
     // directory tree, it's the directory where all cores are stored.
+    let package = match topo.depth_or_below_for_type(&ObjectType::Package){
+        Ok(depth) => depth,
+        Err(_) => return None,
+    };
+
+    println!("{:?}",package);
+
     let core_depth = match topo.depth_or_below_for_type(&ObjectType::Core) {
         Ok(depth) => depth,
         Err(_) => return None,
@@ -257,7 +264,8 @@ mod tests {
     #[test]
     fn test_cores() {
         fil_logger::maybe_init();
-        core_units(2);
+        let result = core_units(2);
+        println!("{:?}",result)
     }
 
     #[test]
@@ -290,6 +298,7 @@ mod tests {
         );
 
         let dc = create_core_units(32, 2, 4);
+        println!("{:?}", dc);
         assert_eq!(
             dc,
             [
