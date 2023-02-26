@@ -101,10 +101,3 @@ impl Settings {
             .try_deserialize()
     }
 }
-
-fn cpu_model(s: &str) -> String {
-    let cache_var = format!("{}_CACHE_DIR", PREFIX);
-    let mut cache_name = env::var(cache_var).unwrap_or_else(|_| "/var/tmp/".to_string());
-    cache_name.push_str(s);
-    cache_name
-}
