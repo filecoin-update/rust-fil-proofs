@@ -221,7 +221,7 @@ fn core_units(cores_per_unit: usize) -> Option<Vec<Mutex<CoreUnit>>> {
 
     // At which depths the cores within one package are. If you think of the "depths" as a
     // directory tree, it's the directory where all cores are stored.
-    let package = match topo.depth_or_below_for_type(&ObjectType::Package){
+    let package = match topo.depth_or_below_for_type(&ObjectType::Machine){
         Ok(depth) => depth,
         Err(_) => return None,
     };
