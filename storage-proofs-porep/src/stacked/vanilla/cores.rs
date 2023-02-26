@@ -11,10 +11,12 @@ type CoreUnit = Vec<CoreIndex>;
 lazy_static! {
     pub static ref TOPOLOGY: Mutex<Topology> = Mutex::new(Topology::new());
     pub static ref CORE_GROUPS: Option<Vec<Mutex<CoreUnit>>> = {
-        let num_producers = &SETTINGS.multicore_sdr_producers;
-        let cores_per_unit = num_producers + 1;
-
-        core_units(cores_per_unit)
+        // let num_producers = &SETTINGS.multicore_sdr_producers;
+        // let cores_per_unit = num_producers + 1;
+        //
+        // core_units(cores_per_unit)
+        let core_cfg = SETTINGS.multicore_sdr_cores.clone();
+        custom_core_units(core_cfg)
     };
 }
 
@@ -216,18 +218,17 @@ fn get_shared_cache_count(topo: &Topology, depth: u32, core_count: usize) -> usi
     1
 }
 
+fn custom_core_units(cfg: String) -> Option<Vec<Mutex<CoreUnit>>> {
+    let groups = cfg.split("|").collect::<Vec<_>>();
+    let cores = groups.iter().map(|group|{ group.split(",").map(|x|CoreIndex(x.parse::<usize>().unwrap())).collect::<Vec<_>>() }).collect::<Vec<_>>();
+    Some(cores.iter().map(|x| Mutex::new(x.clone())).collect::<Vec<_>>())
+}
+
 fn core_units(cores_per_unit: usize) -> Option<Vec<Mutex<CoreUnit>>> {
     let topo = TOPOLOGY.lock().expect("poisoned lock");
 
     // At which depths the cores within one package are. If you think of the "depths" as a
     // directory tree, it's the directory where all cores are stored.
-    let package = match topo.depth_or_below_for_type(&ObjectType::Machine){
-        Ok(depth) => depth,
-        Err(_) => return None,
-    };
-
-    println!("{:?}",package);
-
     let core_depth = match topo.depth_or_below_for_type(&ObjectType::Core) {
         Ok(depth) => depth,
         Err(_) => return None,
@@ -260,6 +261,12 @@ fn core_units(cores_per_unit: usize) -> Option<Vec<Mutex<CoreUnit>>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_custom_cores() {
+        let cores = custom_core_units(String::from("0,1,2,3|4,5,6,7|8,9,10,11|12,13,14,15|20,21,22,23|24,25,26,27|28,29,30,31|36,37,38,39|40,41,42,43|44,45,46,47|48,49,50,51|52,53,54,55|56,57,58,59|60,61,62,63|64,65,66,67|68,69,70,71|72,73,74,75|76,77,78,79|84,85,86,87|88,89,90,91|92,93,94,95|100,101,102,103|104,105,106,107|108,109,110,111|112,113,114,115|116,117,118,119|120,121,122,123|124,125,126,127"));
+        println!("{:?}",cores);
+    }
 
     #[test]
     fn test_cores() {

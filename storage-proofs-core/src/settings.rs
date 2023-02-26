@@ -30,7 +30,7 @@ pub struct Settings {
     pub multicore_sdr_producers: usize,
     pub multicore_sdr_producer_stride: u64,
     pub multicore_sdr_lookahead: usize,
-    pub multicore_sdr_custom_cors: String,
+    pub multicore_sdr_cores: String,
 }
 
 impl Default for Settings {
@@ -55,7 +55,7 @@ impl Default for Settings {
             multicore_sdr_producers: 3,
             multicore_sdr_producer_stride: 128,
             multicore_sdr_lookahead: 800,
-            multicore_sdr_custom_cors: "0,64|".to_string()
+            multicore_sdr_cores: "".to_string(),
         }
     }
 }
